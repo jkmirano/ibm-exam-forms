@@ -1,0 +1,28 @@
+.form {
+    &-upper {
+        border-bottom: 1px solid #EAEAEA;
+    }
+
+    &-title {
+        font-family: 'Source Sans Pro', sans-serif;
+        font-size: 18px;
+        font-weight: 400;
+        margin: 0 70px 0 0;
+        color: #1A1A1A;
+    }
+
+    &-tabs {
+        font-family: 'Source Sans Pro', sans-serif;
+        font-size: 12px;
+        font-weight: 400;
+        color: #333333;
+        padding: 24.5px 15px;
+        cursor: pointer;
+        transition: all ease .5s;
+
+        &.active,
+        &:hover {
+            box-shadow: 0 2px 0 #0B4D4B;
+        }
+    }
+}

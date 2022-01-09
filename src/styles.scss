@@ -37,3 +37,69 @@ $exam-forms-theme: mat.define-light-theme((
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+button {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+}
+
+// Global codes
+
+// Flex
+.flex {
+  &__wrapper {
+    display: flex;
+  }
+
+  &-center {
+    justify-content: center;
+    align-items: center;
+  }
+
+  &-between {
+    justify-content: space-between;
+  }
+}
+
+// Buttons
+.btn {
+  font-family: 'Source Sans Pro', sans-serif;
+  font-size: 14px;
+  font-weight: 400;
+  width: 175px;
+  padding: 7px 10px;
+
+  &-circle {
+    width: 32px;
+    padding: 5px 0 1px;
+    margin-right: 10px;
+    color: #55B286;
+    border: 1px solid #55B286;
+    border-radius: 50%;
+  
+    & mat-icon {
+        font-size: 18px;
+    }
+  }
+
+  &-light {
+    &-gray {
+      color: #040404;
+      background-color: #F1F1F1;
+    }
+
+    &-green {
+      color: #fff;
+      background-color: #1FB582;
+    }
+  }
+}
+
+// Margins
+.margin {
+  &-right-20 {
+    margin-right: 20px;
+  }
+}
