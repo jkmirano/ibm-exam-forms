@@ -1,0 +1,30 @@
+<div class="form__wrapper">
+    <div class="form-upper flex__wrapper flex-center flex-between">
+        <div class="flex-item__wrapper flex__wrapper flex-center">
+            <button 
+                class="btn-circle"
+                type="button"
+            >
+                <mat-icon>arrow_back</mat-icon>
+            </button>
+        
+            <h2 class="form-title">Review Contribution</h2>
+        
+            <div class="form-tab__wrapper">
+                <ng-container *ngFor="let item of locationYear">
+                    <button 
+                        type="button"
+                        [class]="'form-tabs ' + item.class"
+                    >
+                        {{ item.locationName }} {{ item.year }}
+                    </button>
+                </ng-container>
+            </div>
+        </div>
+    
+        <div class="flex-item__wrapper">
+            <button class="btn btn-light-gray margin-right-20" type="button">Cancel</button>
+            <button class="btn btn-light-green" type="button">Submit Contributions</button>
+        </div>
+    </div>
+</div>
