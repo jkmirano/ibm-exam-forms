@@ -1,0 +1,130 @@
+import { Component, OnInit } from '@angular/core';
+import { FormControl, FormGroup } from '@angular/forms';
+import { MatTableDataSource } from '@angular/material/table';
+import { FormDataSourceService } from './form-data-source.service';
+import { KPIElements } from './types/interface';
+
+@Component({
+  selector: 'app-form',
+  templateUrl: './form.component.html',
+  styleUrls: ['./form.component.scss']
+})
+export class FormComponent implements OnInit {
+
+  buttonName: string | undefined;
+  kpiData: any = [];
+  dataFiltered: any = [];
+  locationYear: any = [];
+  tableColumnValidators: any = {};
+  tableColumnAsyncValidators: any = {};
+
+  // Form
+  formTitle: string | undefined;
+  displayedColumns: string[] | undefined;
+  dataSource = new MatTableDataSource<KPIElements>();
+  formGroup: FormGroup = new FormGroup({
+    newDataValue: new FormControl('')
+  });
+  editingCell: number | undefined;
+
+  constructor(private formDataSourceService: FormDataSourceService) { }
+
+  ngOnInit(): void {
+    this.formDataSourceService.getKPIData().subscribe(resp => {
+      this.kpiData = resp;
+
+      // Compute tons/year and kg/capita/year values
+      this.kpiData.forEach((item: any) => {
+        if (item.kpiLabel.includes('tons/year')) {
+          item.newDataValue = ((item.population / item.kpiValue) * item.population);
+          item.existingDataValue = ((item.population / item.existingValue) * item.population);
+        } else if (item.kpiLabel.includes('kg/capita/year')) {
+          item.newDataValue = (item.population / item.kpiValue);
+          item.existingDataValue = (item.population / item.existingValue);
+        } else {
+          item.newDataValue = item.kpiValue;
+          item.existingDataValue = item.existingValue;
+        }
+      });
+
+      this.getFilter(resp);
+      this.locationYear[0].class = 'active';
+      this.formTitle = this.locationYear[0].locationName;
+      this.dataFilter();
+    });
+
+    this.displayedColumns = ['domain', 'kpi', 'newData', 'existingData'];
+  }
+
+  getFilter(data: any) {
+    // Get Location names and Year for the filter
+    data.forEach((item: any) => {
+      if (this.locationYear.find((newItem: any) => newItem.locationName === item.locationName) === undefined) {
+        this.locationYear.push({ locationName: item.locationName, year: item.year, class: null });
+      }
+    });
+  }
+
+  dataFilter() {
+    // Clearing filtered data
+    this.dataFiltered = [];
+
+    // Filtering data
+    this.kpiData.forEach((item: any) => {
+      const activeFilter = this.locationYear.find((locItem: any) => locItem.class === 'active');
+      if (item.locationName === activeFilter.locationName) {
+        this.dataFiltered.push(item);
+      }
+    });
+
+    // Assigning new filter data
+    this.formTitle = this.dataFiltered[0].locationName;
+    this.dataSource.data = this.dataFiltered;
+  }
+
+  tableFilter(tableLocation: string) {
+    if (this.editingCell !== undefined) {
+      this.cancelEdit(this.editingCell);
+    }
+    
+    setTimeout(() => {
+      this.locationYear.forEach((item: any) => {
+        item.class = item.locationName === tableLocation ? 'active' : '';
+      });
+      this.dataFilter();
+    });
+  }
+
+  editCell(rowIndex: number, column: string) {
+    this.editingCell = this.editingCell !== undefined ? this.editingCell : undefined;
+
+    if (this.editingCell !== undefined) {
+      this.cancelEdit(this.editingCell);
+    }
+
+    setTimeout(() => {
+      this.editingCell = rowIndex;
+      const index = this.dataFiltered.findIndex((item: any) => item.rowIndex === rowIndex);
+      const dataItem = this.dataFiltered[index];
+      dataItem.dataAction = 'edit';
+      this.formGroup.controls[column].patchValue(dataItem[column]);
+    });
+  }
+
+  cancelEdit(rowIndex: number) {
+    this.editingCell = undefined;
+    const index = this.dataFiltered.findIndex((item: any) => item.rowIndex === rowIndex);
+    this.dataFiltered[index].dataAction = 'none';
+  }
+
+  saveEdit(rowIndex: number, column: string) {
+    const index = this.dataFiltered.findIndex((item: any) => item.rowIndex === rowIndex);
+    const dataItem = this.dataFiltered[index];
+    const mainDataItem = this.kpiData[index];
+    dataItem.dataAction = 'edited';
+    dataItem[column] = this.formGroup.controls[column].value;
+    mainDataItem[column] = this.formGroup.controls[column].value;
+    this.dataFilter();
+  }
+
+}
