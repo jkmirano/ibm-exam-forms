@@ -107,11 +107,14 @@ button {
         color: #1FB582;
 
         & mat-icon {
-          font-size: 16px;
           height: 24px;
           padding-top: 4px;
         }
       }
+    }
+
+    &-close:hover {
+      color: #EF4F59;
     }
   }
 

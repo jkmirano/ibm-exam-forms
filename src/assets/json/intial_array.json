@@ -80,22 +80,6 @@
         "rowIndex": 4
     },
     {
-        "geographyId": 2,
-        "locationName": "Japan",
-        "year": 2020,
-        "kpiValue": 10000,
-        "natureOfData": "ACTUAL",
-        "existingValue": 12000,
-        "population": 1000000,
-        "kpiName": "TotalWasteGenerated/Year",
-        "kpiLabel": "Total Waste Generated - Rural (tons/year)",
-        "subCategory1": "Rural",
-        "subCategory2": null,
-        "subCategory3": null,
-        "dataAction": "none",
-        "rowIndex": 5
-    },
-    {
         "geographyId": 3,
         "locationName": "Singapore",
         "year": 2019,
