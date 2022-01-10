@@ -15,8 +15,6 @@ export class FormComponent implements OnInit {
   kpiData: any = [];
   dataFiltered: any = [];
   locationYear: any = [];
-  tableColumnValidators: any = {};
-  tableColumnAsyncValidators: any = {};
 
   // Form
   formTitle: string | undefined;
