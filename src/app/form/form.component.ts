@@ -30,21 +30,9 @@ export class FormComponent implements OnInit {
   ngOnInit(): void {
     this.formDataSourceService.getKPIData().subscribe(resp => {
       this.kpiData = resp;
-
-      // Compute tons/year and kg/capita/year values
       this.kpiData.forEach((item: any) => {
-        if (item.kpiLabel.includes('tons/year')) {
-          item.newDataValue = ((item.population / item.kpiValue) * item.population);
-          item.existingDataValue = ((item.population / item.existingValue) * item.population);
-        } else if (item.kpiLabel.includes('kg/capita/year')) {
-          item.newDataValue = (item.population / item.kpiValue);
-          item.existingDataValue = (item.population / item.existingValue);
-        } else {
-          item.newDataValue = item.kpiValue;
-          item.existingDataValue = item.existingValue;
-        }
+        item.newDataValue = item.kpiValue;
       });
-
       this.getFilter(resp);
       this.locationYear[0].class = 'active';
       this.formTitle = this.locationYear[0].locationName;
@@ -64,6 +52,7 @@ export class FormComponent implements OnInit {
   }
 
   dataFilter() {
+    let actualData: any = [];
     // Clearing filtered data
     this.dataFiltered = [];
 
@@ -72,6 +61,20 @@ export class FormComponent implements OnInit {
       const activeFilter = this.locationYear.find((locItem: any) => locItem.class === 'active');
       if (item.locationName === activeFilter.locationName) {
         this.dataFiltered.push(item);
+      }
+    });
+
+    // Checker for Actual and Calculated data
+    this.dataFiltered.forEach((item: any) => {
+      if (item.natureOfData === 'ACTUAL') {
+        actualData.push(item.rowIndex);
+      }
+    });
+    actualData.forEach((item: any, index: number) => {
+      const nextItemIndex = index + 1;
+      if (this.dataFiltered[nextItemIndex] !== undefined && this.dataFiltered[nextItemIndex].natureOfData === 'CALCULATED') {
+        this.dataFiltered[index].newDataValue = (this.dataFiltered[nextItemIndex].newDataValue * this.dataFiltered[index].population);
+        this.dataFiltered[nextItemIndex].newDataValue = (this.dataFiltered[nextItemIndex].population / this.dataFiltered[index].newDataValue);
       }
     });
 
@@ -117,8 +120,9 @@ export class FormComponent implements OnInit {
 
   saveEdit(rowIndex: number, column: string) {
     const index = this.dataFiltered.findIndex((item: any) => item.rowIndex === rowIndex);
+    const index2 = this.kpiData.findIndex((item: any) => item.rowIndex === rowIndex);
     const dataItem = this.dataFiltered[index];
-    const mainDataItem = this.kpiData[index];
+    const mainDataItem = this.kpiData[index2];
     dataItem.dataAction = 'edited';
     dataItem[column] = this.formGroup.controls[column].value;
     mainDataItem[column] = this.formGroup.controls[column].value;
