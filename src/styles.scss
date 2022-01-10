@@ -36,7 +36,10 @@ $exam-forms-theme: mat.define-light-theme((
 /* You can add global styles to this file, and also import other style files */
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+  margin: 0;
+  font-family: 'Source Sans Pro', sans-serif;
+}
 
 button {
   margin: 0;
@@ -65,7 +68,6 @@ button {
 
 // Buttons
 .btn {
-  font-family: 'Source Sans Pro', sans-serif;
   font-size: 14px;
   font-weight: 400;
   width: 175px;
@@ -78,9 +80,38 @@ button {
     color: #55B286;
     border: 1px solid #55B286;
     border-radius: 50%;
+    cursor: pointer;
   
     & mat-icon {
         font-size: 18px;
+    }
+
+    &-sm {
+      width: 24px;
+      height: 24px;
+      padding: 0;
+
+      & mat-icon {
+        font-size: 14px;
+        height: 24px;
+        padding-top: 4px;
+      }
+    }
+
+    &-default {
+      color: #333;
+      background-color: #f1f1f1;
+      border: 0;
+
+      &:hover {
+        color: #1FB582;
+
+        & mat-icon {
+          font-size: 16px;
+          height: 24px;
+          padding-top: 4px;
+        }
+      }
     }
   }
 
@@ -99,7 +130,21 @@ button {
 
 // Margins
 .margin {
-  &-right-20 {
-    margin-right: 20px;
+  &-none {
+    margin: 0;
+  }
+
+  &-right {
+    &-20 {
+      margin-right: 20px;
+    }
+
+    &-70 {
+      margin-right: 70px;
+    }
+  }
+
+  &-y-30 {
+    margin: 30px 0;
   }
 }
